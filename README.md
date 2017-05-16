@@ -1,9 +1,9 @@
 # QingStor SDK for .NET
 
 
-[![Build Status](https://travis-ci.org/yunify/qingstor-sdk-csharp.svg?branch=master)]()
+[![Build Status](https://travis-ci.org/yunify/qingstor-sdk-net.svg?branch=master)]()
 [![API Reference](http://img.shields.io/badge/api-reference-green.svg)](http://docs.qingcloud.com)
-[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/yunify/qingstor-sdk-csharp/blob/master/LICENSE)
+[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/yunify/qingstor-sdk-net/blob/master/LICENSE)
 
 
 The official QingStor SDK for the C# programming language.
@@ -33,7 +33,7 @@ Now you are ready to code. You can read the detailed guides in the list below to
 - [Configuration Guide](docs/configuration.md)
 - [QingStor Service Usage Guide](docs/qingstor_service_usage.md)
 
-Checkout our [releases](https://github.com/yunify/qingstor-sdk-csharp/releases) and [change logs](https://github.com/yunify/qingstor-sdk-csharp/blob/master/CHANGELOGS) for information about the latest features, bug fixes and new ideas.
+Checkout our [releases](https://github.com/yunify/qingstor-sdk-net/releases) and [change logs](https://github.com/yunify/qingstor-sdk-net/blob/master/CHANGELOGS) for information about the latest features, bug fixes and new ideas.
 
 ## Reference Documentations
 
@@ -42,7 +42,7 @@ Checkout our [releases](https://github.com/yunify/qingstor-sdk-csharp/releases) 
 
 ## Contributing
 
-1. Fork it ( https://github.com/yunify/qingstor-sdk-csharp/fork )
+1. Fork it ( https://github.com/yunify/qingstor-sdk-net/fork )
 2. Create your feature branch (`git checkout -b new-feature`)
 3. Commit your changes (`git commit -asm 'Add some feature'`)
 4. Push to the branch (`git push origin new-feature`)
