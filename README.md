@@ -1,4 +1,4 @@
-# QingStor SDK for C#
+# QingStor SDK for .NET
 
 
 [![Build Status](https://travis-ci.org/yunify/qingstor-sdk-csharp.svg?branch=master)]()

@@ -5,7 +5,7 @@
 1. Clone source code
 
 ```bash
-git clone git@github.com:yunify/qingstor-sdk-csharp.git
+git clone git@github.com:yunify/qingstor-sdk-net.git
 ```
 
 2. Add it to Project
