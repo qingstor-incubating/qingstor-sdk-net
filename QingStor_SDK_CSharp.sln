@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CB939DC4-F23C-49A7-B720-19D102F323DE}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QingStor_SDK_CSharp", "src\QingStor_SDK_CSharp.csproj", "{436FC414-F28F-4066-9DD3-CC5A074B823A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QingStor_SDK_CSharp_Test", "test\QingStor_SDK_CSharp_Test.csproj", "{B60DA45B-47F3-4F5F-A733-B9E3D540B29A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{436FC414-F28F-4066-9DD3-CC5A074B823A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{436FC414-F28F-4066-9DD3-CC5A074B823A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{436FC414-F28F-4066-9DD3-CC5A074B823A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{436FC414-F28F-4066-9DD3-CC5A074B823A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B60DA45B-47F3-4F5F-A733-B9E3D540B29A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60DA45B-47F3-4F5F-A733-B9E3D540B29A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60DA45B-47F3-4F5F-A733-B9E3D540B29A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60DA45B-47F3-4F5F-A733-B9E3D540B29A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

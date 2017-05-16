@@ -1,0 +1,7 @@
+language: csharp
+before_install:
+  - 
+install:
+  - nuget restore QingStor_SDK_CSharp.sln
+script:
+  - xbuild /p:Configuration=Release QingStor_SDK_CSharp.sln

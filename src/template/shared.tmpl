@@ -1,0 +1,458 @@
+﻿{{define "RenderOperationValidate"}}
+    {{- $capsule := index . 0 -}}
+    {{- $belongs := index . 1 -}}
+    {{- $operation := index . 2 -}}
+
+    {{- $opID := $operation.ID | camelCase -}}
+        @Override
+        public String validateParam() {
+            {{- template "ValidateCustomizedType" $operation.Request.Params -}}
+            {{- template "ValidateCustomizedType" $operation.Request.Headers -}}
+            {{- template "ValidateCustomizedType" $operation.Request.Elements }}
+
+            return null;
+        }
+{{end}}
+
+{{define "ValidateCustomizedType"}}
+    {{- $customizedType := . -}}
+{{- range $_, $property := $customizedType.Properties -}}
+{{- $isNormalType :=  (eq $property.Type "string") -}}
+{{- $isContentLength := eq $property.ID "Content-Length" -}}
+{{- if and $isNormalType (not $isContentLength) -}}
+    {{- if $property.IsRequired }}
+            if (QSStringUtil.isEmpty(this.get{{$property.ID | camelCase}}())) {
+                return QSStringUtil.getParameterRequired("{{$property.ID | camelCase}}","{{$customizedType.ID | camelCase}}");
+            }
+    {{- end -}}
+    {{- if gt ($property.Enum | len) 0 }}
+            String[] {{$property.ID | camelCase | lowerFirst -}}
+            ValidValues = {
+                {{- $property.Enum | commaConnectedWithQuote -}}
+            };
+
+            boolean {{$property.ID | camelCase | lowerFirst}}IsValid = false;
+            for(String v : {{$property.ID | camelCase | lowerFirst}}ValidValues){
+                if(v.equals(this.get{{$property.ID | camelCase}}())){
+                    {{$property.ID | camelCase | lowerFirst}}IsValid = true;
+                }
+            }
+
+            if (!{{$property.ID | camelCase | lowerFirst}}IsValid) {
+                return QSStringUtil.getParameterValueNotAllowedError("{{$property.ID | camelCase}}",
+                        this.get{{$property.ID | camelCase}}()+"",
+                        {{$property.ID | camelCase | lowerFirst}}ValidValues);
+            }
+    {{- end -}}
+{{- end -}}
+
+{{- $isNormalType :=  (eq $property.Type "integer") -}}
+    {{- $isContentLength := eq $property.ID "Content-Length" -}}
+    {{- if and $isNormalType (not $isContentLength) -}}
+        {{- if $property.IsRequired }}
+            if (this.get{{$property.ID | camelCase}}() < 0 ) {
+                return QSStringUtil.getParameterRequired("{{$property.ID | camelCase}}","{{$customizedType.ID | camelCase}}");
+            }
+            {{- end -}}
+            {{- if gt ($property.Enum | len) 0}}
+            String[] {{$property.ID | camelCase | lowerFirst -}}
+            ValidValues = {
+                {{- $property.Enum | commaConnectedWithQuote -}}
+            };
+            boolean {{$property.ID | camelCase | lowerFirst}}IsValid = false;
+            for(String v : {{$property.ID | camelCase | lowerFirst}}ValidValues){
+                if(v.equals(this.get{{$property.ID | camelCase}}()+"")){
+                    {{$property.ID | camelCase | lowerFirst}}IsValid = true;
+                }
+            }
+
+            if (!{{$property.ID | camelCase | lowerFirst}}IsValid) {
+                return QSStringUtil.getParameterValueNotAllowedError("{{$property.ID | camelCase}}",
+                        this.get{{$property.ID | camelCase}}()+"",
+                        {{$property.ID | camelCase | lowerFirst}}ValidValues);
+            }
+                {{end -}}
+            {{- end -}}
+
+            {{- if eq $property.Type "object" }}
+            if (this.get{{$property.ID | camelCase}}() != null) {
+                String vValidate = this.get{{$property.ID | camelCase}}().validateParam();
+                if (!QSStringUtil.isEmpty(vValidate)) {
+                    return vValidate;
+                }
+            }
+                {{ if $property.IsRequired -}}
+            if (this.get{{$property.ID | camelCase}}() == null) {
+                return QSStringUtil.getParameterRequired(
+                    "{{$property.ID | camelCase}}",
+                    "{{$customizedType.ID | camelCase}}");
+            }
+                {{- end -}}
+            {{- end -}}
+
+            {{- if eq $property.Type "array" -}}
+
+                {{- $isNotString := ne $property.ExtraType "string" -}}
+                {{- $isNotInteger := ne $property.ExtraType "integer"}}
+                {{- $isNotTimestamp := ne $property.ExtraType "timestamp" -}}
+                {{- if and $isNotString $isNotInteger $isNotTimestamp}}
+            if (this.get{{$property.ID | camelCase}}() != null && this.get{{$property.ID | camelCase}}().size() > 0 ) {
+                for (int i = 0 ; i < this.get{{$property.ID | camelCase}}().size() ; i++ ) {
+                    String vValidate = this.get{{$property.ID | camelCase}}().get(i).validateParam();
+                    if (!QSStringUtil.isEmpty(vValidate)) {
+                        return vValidate;
+                    }
+                }
+            }
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{define "RenderProperties"}}
+	{{- $customizedType := index . 0 -}}
+	{{- $PropertyExtraTags := index . 1 -}}
+	{{- $PropertyIn := index . 2 -}}
+	
+	{{range $_, $property := $customizedType.Properties -}}
+		{{if $property.Description}}
+		// {{$property.Description -}}
+		{{end -}}
+		{{if $property.Enum}}
+		// {{$property.ID | camelCase}}'s available values: {{$property.Enum | commaConnected}}
+		{{end -}}
+		{{if $property.IsRequired -}}
+            // Required
+        {{- end}}
+		
+		{{ if eq $PropertyIn "header" -}}
+            {{template "Property_Header" $property}}
+		{{- else if eq $PropertyIn "query" -}}
+		    {{template "Property_Query" $property}}
+        {{- else if eq $PropertyIn "body" -}}
+            {{template "Property_Body" $property}}
+        {{- else -}}
+            {{template "Property_Normal" $property}}
+        {{- end -}}
+	{{end}}
+{{end}}
+
+{{define "Property_Normal"}}
+	{{- $property := . -}}
+	{{$propertyID := replace $property.ID "-" "_" -1}}
+	public {{template "PropertyType" $property}}{{printf ` %s` $propertyID}} { get; set; }
+{{end}}
+
+{{define "Property_Header"}}
+	{{- $property := . -}}
+	{{$propertyID := replace $property.ID "-" "_" -1}}
+	[CParam(ParamType = "header", ParamName = "{{printf `%s` $propertyID}}")]
+	public {{template "PropertyType" $property}}{{printf ` %s` $propertyID}} { get; set; }
+{{end}}
+
+{{define "Property_Query"}}
+	{{- $property := . -}}
+	{{$propertyID := replace $property.ID "-" "_" -1}}
+	[CParam(ParamType = "query", ParamName = "{{printf `%s` $propertyID}}")]
+	public {{template "PropertyType" $property}}{{printf ` %s` $propertyID}} { get; set; }
+{{end}}
+
+{{define "Property_Body"}}
+	{{- $property := . -}}
+	{{$propertyID := replace $property.ID "-" "_" -1}}
+	[CParam(ParamType = "body", ParamName = "{{printf `%s` $propertyID}}")]
+	public {{template "PropertyType" $property}}{{printf ` %s` $propertyID}} { get; set; }
+{{end}}
+
+{{define "Type"}}
+	{{- $typeName := . -}}
+
+	{{- if eq $typeName "string" -}}
+		string
+	{{- else if eq $typeName "boolean" -}}
+		bool
+	{{- else if eq $typeName "integer" -}}
+		long
+	{{- else if eq $typeName "long" -}}
+		long
+	{{- else if eq $typeName "timestamp" -}}
+		string
+	{{- else if eq $typeName "binary" -}}
+		File
+	{{- else if eq $typeName "array" -}}
+		List
+	{{- else if eq $typeName "object" -}}
+		interface{}
+	{{- else if eq $typeName "map" -}}
+		Map
+	{{- else if eq $typeName "any" -}}
+		interface{}
+	{{- else -}}
+		C{{$typeName | camelCase | upperFirst}}Type
+	{{- end -}}
+{{end}}
+
+{{define "PropertyType"}}
+	{{- $property := . -}}
+	
+	{{- if eq $property.Type "object" -}}
+		{{template "Type" $property.ExtraType}}
+	{{- else if eq $property.Type "array" -}}
+		{{template "Type" $property.ExtraType}}[]
+	{{- else if eq $property.Type "map" -}}
+		map[string]{{template "Type" $property.ExtraType}}
+	{{- else if eq $property.Type "any" -}}
+		{{template "Type" $property.Type}}
+	{{- else -}}
+		{{template "Type" $property.Type}}
+	{{- end -}}
+{{end}}
+
+{{define "PropertyExtraTags"}}
+	{{- $PropertyExtraTags := . -}}
+	{{- if $PropertyExtraTags -}}
+		{{- printf " %s" $PropertyExtraTags -}}
+	{{- end -}}
+{{end}}
+
+{{define "Type_Init"}}
+	{{- $typeName := . -}}
+
+	{{- if eq $typeName "string" -}}
+		""
+	{{- else if eq $typeName "boolean" -}}
+		false
+	{{- else if eq $typeName "integer" -}}
+		0
+	{{- else if eq $typeName "long" -}}
+		0
+	{{- else if eq $typeName "timestamp" -}}
+		""
+	{{- else if eq $typeName "binary" -}}
+		""
+	{{- else if eq $typeName "array" -}}
+		new List
+	{{- else if eq $typeName "object" -}}
+		new Object()
+	{{- else if eq $typeName "map" -}}
+		new Dictionary<Object, Object>
+	{{- else if eq $typeName "any" -}}
+		new Object()
+	{{- else -}}
+		null
+	{{- end -}}
+{{end}}
+
+{{define "PropertyType_Init"}}
+	{{- $property := . -}}
+	
+	{{- if eq $property.Type "object" -}}
+		{{template "Type_Init" $property.ExtraType}}
+	{{- else if eq $property.Type "array" -}}
+		{{template "Type_Init" $property.ExtraType}}
+	{{- else if eq $property.Type "map" -}}
+		map[string]{{template "Type_Init" $property.ExtraType}}
+	{{- else if eq $property.Type "any" -}}
+		{{template "Type_Init" $property.Type}}
+	{{- else -}}
+		{{template "Type_Init" $property.Type}}
+	{{- end -}}
+{{end}}
+
+{{define "Property_Init"}}
+	{{- $customizedType := index . 0 -}}
+	
+	{{range $_, $property := $customizedType.Properties -}}
+		{{$propertyID := replace $property.ID "-" "_" -1}}
+		this.{{$propertyID}} = {{template "PropertyType_Init" $property}};
+	{{end}}
+{{end}}
+
+{{define "RenderInputAndOutput"}}
+	{{$belongs := index . 0}}
+	{{$operation := index . 1}}
+
+	{{$opID := $operation.ID | camelCase}}
+
+    {{$hasParams := gt (len $operation.Request.Params.Properties) 0}}
+    {{$hasHeaders := gt (len $operation.Request.Headers.Properties) 0}}
+    {{$hasElements := gt (len $operation.Request.Elements.Properties) 0}}
+    {{$hasStringBody := eq $operation.Request.Body.Type "string"}}
+    {{$hasBinaryBody := eq $operation.Request.Body.Type "binary"}}
+    {{$hasInput := or $hasParams $hasHeaders $hasElements $hasStringBody $hasBinaryBody}}
+	
+	{{if $hasInput}}
+    public class C{{$opID}}Input : ICustomType
+	{
+		public C{{$opID}}Input()
+		{
+			{{if $operation.Request.Params.Properties | len}}
+				{{- $data := $operation.Request.Params -}}
+				{{template "Property_Init" passThrough $data}}
+			{{end}}
+			{{if $operation.Request.Headers.Properties | len}}
+				{{- $data := $operation.Request.Headers -}}
+				{{template "Property_Init" passThrough $data}}
+			{{end}}
+			{{if $operation.Request.Elements.Properties | len}}
+				{{- $data := $operation.Request.Elements -}}
+				{{template "Property_Init" passThrough $data}}
+			{{end}}
+			{{if $hasStringBody}}
+				this.Body = "";
+			{{else if $hasBinaryBody}}
+				this.Body = null;
+			{{end}}
+		}
+		{{if $operation.Request.Params.Properties | len}}
+			{{- $data := $operation.Request.Params -}}
+			{{template "RenderProperties" passThrough $data `` "query"}}
+		{{end}}
+
+		{{if $operation.Request.Headers.Properties | len}}
+			{{- $data := $operation.Request.Headers -}}
+			{{template "RenderProperties" passThrough $data `` "header"}}
+		{{end}}
+
+		{{if $operation.Request.Elements.Properties | len}}
+			{{if $operation.Request.Body.Description -}}
+				// {{$operation.Request.Body.Description}}
+			{{- end}}
+			{{- $data := $operation.Request.Elements -}}
+			{{template "RenderProperties" passThrough $data `` "body"}}
+		{{end}}
+		{{if or $hasStringBody $hasBinaryBody}}
+			{{if $operation.Request.Body.Description -}}
+				// {{$operation.Request.Body.Description}}
+			{{- end}}
+			{{- $data := $operation.Request.Body -}}
+			{{template "RenderProperties" passThrough $data `` "body"}}
+		{{end}}
+		{{if or $hasStringBody $hasBinaryBody}}
+			[CParam(ParamType = "body", ParamName = "Body")]
+			{{if $operation.Request.Body.Description -}}
+				// {{$operation.Request.Body.Description}}
+			{{- end}}
+			{{if $hasStringBody}}
+				public string Body { get; set; }
+			{{else if $hasBinaryBody}}
+				public FileStream Body { get; set; }
+			{{end}}
+		{{end}}
+	}
+    {{end}}
+
+	public class C{{$opID}}Output : ICustomType
+	{
+		public int StatusCode { get; set; }
+		public string RequestID { get; set; }
+		public string ErrorCode { get; set; }
+		{{if $operation.Response.Elements.Properties | len}}
+			{{$data := $operation.Response.Elements}}
+			{{template "RenderProperties" passThrough $data `` "query"}}
+		{{end}}
+
+		{{if $operation.Response.Headers.Properties | len}}
+			{{$data := $operation.Response.Headers}}
+			{{template "RenderProperties" passThrough $data `` "header"}}
+		{{end}}
+		
+		{{if eq $operation.Response.Body.Type "string"}}
+		[CParam(ParamType = "body", ParamName = "Body")]
+		{{if $operation.Response.Body.Description -}}
+			// {{$operation.Response.Body.Description}}
+		{{- end}}
+		public string Body { get; set; }
+		{{else if eq $operation.Response.Body.Type "binary"}}
+		[CParam(ParamType = "body", ParamName = "Body")]
+		{{if $operation.Response.Body.Description -}}
+			// {{$operation.Response.Body.Description}}
+		{{- end}}
+		public StreamReader Body { get; set; }
+		{{end}}
+	}
+{{end}}
+
+{{define "RenderOperation"}}
+	{{$belongs := index . 0}}
+	{{$operation := index . 1}}
+
+	{{$opID := $operation.ID | camelCase}}
+
+	{{$newURI := replace $operation.Request.URI "{objectKey}" "replace" -1}}
+    {{$hasParams := gt (len $operation.Request.Params.Properties) 0}}
+    {{$hasHeaders := gt (len $operation.Request.Headers.Properties) 0}}
+    {{$hasElements := gt (len $operation.Request.Elements.Properties) 0}}
+    {{$hasStringBody := eq $operation.Request.Body.Type "string"}}
+    {{$hasBinaryBody := eq $operation.Request.Body.Type "binary"}}
+    {{$hasInput := or $hasParams $hasHeaders $hasElements $hasStringBody $hasBinaryBody}}
+    /*
+     *
+     {{- if $hasInput}}
+     * @param InputParam
+     {{- end}}
+     *
+     * Documentation URL: {{$operation.DocumentationURL}}
+    */
+    public C{{$opID | camelCase | upperFirst}}Output
+    {{if eq $belongs "Bucket" -}}
+        {{replace $opID "Bucket" "" -1 | camelCase | upperFirst }}
+    {{- else}}
+        {{$opID | camelCase | upperFirst -}}
+    {{end}}
+    (
+    {{if eq $operation.Request.URI $newURI}}
+        {{- if $hasInput}}
+         C{{$opID | camelCase | upperFirst}}Input InputParam
+        {{end}}
+    {{- else -}}
+     string ObjectName{{- if $hasInput}}, C{{$opID | camelCase | upperFirst}}Input InputParam{{end}}
+    {{end}}
+    )
+	{
+		{{$uri := $operation.Request.URI}}
+		{{$uri := replace $uri "{" "<" -1}}
+		{{$uri := replace $uri "}" ">" -1}}
+		{{$uri := dashConnected $uri}}
+			
+        Dictionary<Object, Object> dictInput = new Dictionary<Object, Object>();
+		if (dictInput == null)
+		{
+			return null;
+		}
+
+		string strURIPath = "{{$uri}}";
+		{{if eq $belongs "Bucket" -}}
+		strURIPath = strURIPath.Replace("<bucket-name>", this.BucketName);
+        dictInput.Add(ConstDef.REQ_HEADER_BUCKET_NAME, this.BucketName);
+		{{else if eq $belongs "Object" -}}
+		strURIPath = strURIPath.Replace("<bucket-name>", this.BucketName);
+        dictInput.Add(ConstDef.REQ_HEADER_BUCKET_NAME, this.BucketName);
+		{{end}}
+		{{if ne $operation.Request.URI $newURI}}
+		strURIPath = strURIPath.Replace("<object-key>", ObjectName);
+		dictInput.Add(ConstDef.REQ_HEADER_OBJECT_NAME, ObjectName);
+		{{end}}
+        dictInput.Add(ConstDef.REQ_HEADER_ZONE, this.Zone);
+		dictInput.Add(ConstDef.OPERATION_ID, "{{$opID}}");
+		dictInput.Add(ConstDef.REQ_HEADER_METHOD, "{{$operation.Request.Method}}");
+		dictInput.Add(ConstDef.REQ_HEADER_REQUEST_PATH, strURIPath);
+		dictInput.Add(ConstDef.REQ_HEADER_HOST, this.Config.Host);
+		dictInput.Add(ConstDef.REQ_HEADER_PORT, this.Config.Port);
+		dictInput.Add(ConstDef.REQ_HEADER_PROTOCO, this.Config.Protoco);
+		dictInput.Add(ConstDef.REQ_HEADER_LOG_LEVEL, this.Config.LogLevel);
+		dictInput.Add(ConstDef.REQ_HEADER_CONNECT_RETRY, this.Config.ConnectionRetry);
+		dictInput.Add(ConstDef.REQ_HEADER_ACCESS_KEY_ID, this.Config.AccessKeyID);
+		dictInput.Add(ConstDef.REQ_HEADER_SECRET_ACCESS_KEY, this.Config.SecretAccessKey);
+
+		string strResponse = CRequest.GetInstance().Request(dictInput, {{if $hasInput}}InputParam{{else}}null{{end}});
+		JavaScriptSerializer Serializer = new JavaScriptSerializer();
+		if (Serializer != null)
+		{
+			Serializer.MaxJsonLength = Int32.MaxValue;
+			return Serializer.Deserialize<C{{$opID | camelCase | upperFirst}}Output>(strResponse);
+		}
+
+		return null;  
+    }
+{{end}}
