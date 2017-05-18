@@ -7,7 +7,7 @@ Each API function take a Input struct and return an Output struct. The Input str
 
 You can use a specified version of a service by import a service package with a date suffix.
 
-``` C#
+``` .NET
 using QingStor_SDK_CSharp.Service;
 ```
 
@@ -15,13 +15,13 @@ using QingStor_SDK_CSharp.Service;
 
 Initialize the QingStor service with a configuration
 
-``` C#
+``` .NET
 CQingStor Service = new CQingStor(Config);
 ```
 
 List buckets
 
-``` C#
+``` .NET
 CListBucketsOutput ListBuckets = Service.ListBuckets(null);
 
 // Print the HTTP status code.
@@ -39,13 +39,13 @@ Console.Write(ListBuckets.buckets[0].name);
 
 Initialize a QingStor bucket
 
-``` C#
+``` .NET
 CBucket Bucket = Service.Bucket("bucket-name", "zone");
 ```
 
 List objects in the bucket
 
-``` C#
+``` .NET
 CListObjectsOutput ListObjectsOutput = Bucket.ListObjects(null);
 
 // Print the HTTP status code.
@@ -59,7 +59,7 @@ Console.Write(ListObjectsOutput.keys.Length);
 
 Set ACL of the bucket
 
-``` C#
+``` .NET
 CGranteeType Grantee = new CGranteeType() { id = "usr-id", type = "user" };
 CACLType ACL = new CACLType() { grantee = Grantee, permission = "FULL_CONTROL" };
 CPutBucketACLInput PutBucketACLInput = new CPutBucketACLInput();
@@ -73,7 +73,7 @@ Console.Write(PutBucketACLOutput.StatusCode);
 
 Put object
 
-``` C#
+``` .NET
 CPutObjectInput PutObjectInput = new CPutObjectInput();
 PutObjInput.Body = new FileStream("/tmp/Screenshot.jpg", FileMode.Open);
 CPutObjectOutput PutObjectOutput = Bucket.PutObject("Screenshot.jpg", PutObjectInput);
@@ -85,7 +85,7 @@ Console.Write(PutObjectOutput.StatusCode);
 
 Delete object
 
-``` C#
+``` .NET
 CDeleteObjectOutput DeleteObjectOutput = BucketObj.DeleteObject("Screenshot.jpg");
 
 // Print the HTTP status code.
@@ -95,7 +95,7 @@ Console.Write(DeleteObjectOutput.StatusCode);
 
 Initialize Multipart Upload
 
-``` C#
+``` .NET
 CInitiateMultipartUploadInput InitInput = new CInitiateMultipartUploadInput();
 InitInput.Content_Type = "application/pdf";
 CInitiateMultipartUploadOutput InitOutput = Bucket.InitiateMultipartUpload("Test.pdf", InitInput);
@@ -111,7 +111,7 @@ Console.Write(InitOutput.upload_id);
 
 Upload Multipart
 
-``` C#
+``` .NET
 CUploadMultipartInput UploadInput1 = new CUploadMultipartInput();
 UploadInput1.upload_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 UploadInput1.part_number = 1;
@@ -145,7 +145,7 @@ Console.Write(UploadOutput3.StatusCode);
 
 Complete Multipart Upload
 
-``` C#
+``` .NET
 CCompleteMultipartUploadInput CompleteInput = new CCompleteMultipartUploadInput();
 CompleteInput.upload_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 CObjectPartType ObjPart1 = new CObjectPartType();
@@ -164,7 +164,7 @@ Console.Write(CompleteOutput.StatusCode);
 
 Abort Multipart Upload
 
-``` C#
+``` .NET
 CAbortMultipartUploadInput AbortInput = new CAbortMultipartUploadInput();
 AbortInput.upload_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 CAbortMultipartUploadOutput AbortOutput = Bucket.AbortMultipartUpload("Test.pdf", AbortInput);

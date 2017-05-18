@@ -1,7 +1,9 @@
 language: csharp
 before_install:
-  - 
+  - nuget restore Newtonsoft.Json
 install:
-  - nuget restore QingStor_SDK_CSharp.sln
+  - 
 script:
-  - xbuild /p:Configuration=Release QingStor_SDK_CSharp.sln
+  - xbuild /p:Configuration=Release qingstor-sdk-net35.sln
+  - xbuild /p:Configuration=Release qingstor-sdk-net40.sln
+  - xbuild /p:Configuration=Release qingstor-sdk-net45.sln

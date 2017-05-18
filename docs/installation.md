@@ -1,18 +1,23 @@
 # Installation Guide
 
-## Install from source code
+## Requirement
 
-1. Clone source code
+This SDK requires the Target Framework version is later than 3.5.   
 
-```bash
-git clone git@github.com:yunify/qingstor-sdk-csharp.git
-```
+## Installation
 
-2. Add it to Project
-Open the source code with Visual Studio 2013 or later than the version, add QingStor_SDK_CSharp project to your project by References(References->Add Reference).
+1. Install from source code
 
-## Modify project properties
-In your project, add the properties that Post-build Event Command Line(properties->Build Events->Post-build Event Command Line):
-$(SolutionDir)CopyFile.bat $(Configuration) $(SolutionDir)
+git clone git@github.com:yunify/qingstor-sdk-net.git
+Open the source code by Visual Studio 2013 or later
 
-then, modify the CopyFile.bat for your project output path.
+2. Reference DLL
+
+You can download the DLL from [here](https://github.com/yunify/qingstor-sdk-net/releases), and add it to your project. 
+Because the SDK depends on Newtonsoft.Json.dll, you must install it for your version:
+Install-Package Newtonsoft.Json 
+
+3. Install from NuGet
+
+Search QingStor_SDK_NET45(the target framework is 4.5) that your version by NuGet Package Manager, or Input command line in the console:
+Install-Package QingStor_SDK_NET45

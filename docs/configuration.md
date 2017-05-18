@@ -2,7 +2,7 @@
 
 ## Summary
 
-This SDK uses a structure called "Config" to store and manage configuration, read comments of public functions in ["config/config.go"](https://github.com/yunify/qingstor-sdk-go/blob/master/config/config.go) for details.
+This SDK uses a structure called "Config" to store and manage configuration, read comments of public functions in ["Common/Config.cs"](https://github.com/yunify/qingstor-sdk-net/blob/master/Common/Config.cs) for details.
 
 Except for Access Key, you can also configure the API endpoint for private cloud usage scenario. All available configurable items are listed in the default configuration file.
 
@@ -32,13 +32,13 @@ Just create a config structure instance with your API Access Key, and initialize
 
 Create default configuration
 
-``` C#
+``` .NET
 CConfig Config = new CConfig();
 ```
 
 Create configuration from Access Key
 
-``` C#
+``` .NET
 CConfig Config = new CConfig("ACCESS_KEY_ID", "SECRET_ACCESS_KEY");
 
 CConfig Config = new CConfig();
@@ -48,13 +48,13 @@ Config.SecretAccessKey = "SECRET_ACCESS_KEY";
 
 Load configuration from config file
 
-``` C#
+``` .NET
 CConfig Config = new CConfig("PATH/TO/FILE");
 ```
 
 Change API endpoint
 
-``` C#
+``` .NET
 CConfig Config = new CConfig();
 Config.Protoco = "https";
 Config.Host = "api.private.com";
