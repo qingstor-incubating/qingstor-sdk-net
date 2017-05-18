@@ -8,7 +8,7 @@ This SDK requires the Target Framework version is later than 3.5.
 
 ### Install from source code
 
-$ git clone git@github.com:yunify/qingstor-sdk-net.git
+$ git clone https://github.com/yunify/qingstor-sdk-net.git
 
 Open the source code by Visual Studio 2013 or later.
 
