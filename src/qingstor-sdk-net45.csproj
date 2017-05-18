@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E992B930-68C0-463F-AFAE-73B43EF6ABA6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QingStor_SDK_NET</RootNamespace>
+    <AssemblyName>QingStor_SDK_NET</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Packages\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.JavaScript.Services, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\Microsoft.JavaScript.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Packages\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Packages\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Config.cs" />
+    <Compile Include="Common\ConstDef.cs" />
+    <Compile Include="Common\CustomType.cs" />
+    <Compile Include="Common\ExceptionInfo.cs" />
+    <Compile Include="Common\GlobalSet.cs" />
+    <Compile Include="Common\IInput.cs" />
+    <Compile Include="Common\IOutput.cs" />
+    <Compile Include="Common\JsonUtils.cs" />
+    <Compile Include="Common\ParamAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\Authorization.cs" />
+    <Compile Include="Request\Request.cs" />
+    <Compile Include="Service\Bucket.cs" />
+    <Compile Include="Service\QingStor.cs" />
+    <Compile Include="Service\Types.cs" />
+    <Compile Include="Yaml\Custom\BlockScalarModifier.cs" />
+    <Compile Include="Yaml\Custom\ChompingMethod.cs" />
+    <Compile Include="Yaml\Custom\MappingEntry.cs" />
+    <Compile Include="Yaml\Custom\Scalar.cs" />
+    <Compile Include="Yaml\Custom\YamlDocument.cs" />
+    <Compile Include="Yaml\Pair.cs" />
+    <Compile Include="Yaml\ParserCustom.cs" />
+    <Compile Include="Yaml\ParserInput.cs" />
+    <Compile Include="Yaml\Syntax\BlockScalarModifier.cs" />
+    <Compile Include="Yaml\Syntax\DataItem.cs" />
+    <Compile Include="Yaml\Syntax\Directive.cs" />
+    <Compile Include="Yaml\Syntax\GlobalTagPrefix.cs" />
+    <Compile Include="Yaml\Syntax\LocalTagPrefix.cs" />
+    <Compile Include="Yaml\Syntax\Mapping.cs" />
+    <Compile Include="Yaml\Syntax\MappingEntry.cs" />
+    <Compile Include="Yaml\Syntax\NamedTagHandle.cs" />
+    <Compile Include="Yaml\Syntax\NodeProperty.cs" />
+    <Compile Include="Yaml\Syntax\NonSpecificTag.cs" />
+    <Compile Include="Yaml\Syntax\PrimaryTagHandle.cs" />
+    <Compile Include="Yaml\Syntax\ReservedDirective.cs" />
+    <Compile Include="Yaml\Syntax\Scalar.cs" />
+    <Compile Include="Yaml\Syntax\SecondaryTagHandle.cs" />
+    <Compile Include="Yaml\Syntax\Sequence.cs" />
+    <Compile Include="Yaml\Syntax\ShorthandTag.cs" />
+    <Compile Include="Yaml\Syntax\Tag.cs" />
+    <Compile Include="Yaml\Syntax\TagDirective.cs" />
+    <Compile Include="Yaml\Syntax\TagHandle.cs" />
+    <Compile Include="Yaml\Syntax\TagPrefix.cs" />
+    <Compile Include="Yaml\Syntax\VerbatimTag.cs" />
+    <Compile Include="Yaml\Syntax\YamlDirective.cs" />
+    <Compile Include="Yaml\Syntax\YamlDocument.cs" />
+    <Compile Include="Yaml\Syntax\YamlStream.cs" />
+    <Compile Include="Yaml\Syntax\YamlVersion.cs" />
+    <Compile Include="Yaml\TextInput.cs" />
+    <Compile Include="Yaml\TextParserCommon.cs" />
+    <Compile Include="Yaml\YamlParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\Config.yaml" />
+    <None Include="packages.net45.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Packages\IronRuby.dll" />
+    <Content Include="Packages\IronRuby.Libraries.dll" />
+    <Content Include="Packages\IronRuby.Libraries.Yaml.dll" />
+    <Content Include="Packages\log4net.dll" />
+    <Content Include="Packages\Microsoft.Dynamic.dll" />
+    <Content Include="Packages\Microsoft.Scripting.dll" />
+    <Content Include="Packages\Microsoft.Scripting.Metadata.dll" />
+    <Content Include="Packages\Newtonsoft.Json.dll" />
+    <Content Include="Yaml\YAML.PEG.txt" />
+    <Content Include="Yaml\YAML.txt" />
+    <Content Include="Yaml\YAML_Sample.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
