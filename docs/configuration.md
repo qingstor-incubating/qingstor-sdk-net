@@ -8,6 +8,8 @@ Except for Access Key, you can also configure the API endpoint for private cloud
 
 ___Default Configuration File:___
 
+You can copy the default configuration file to your project directory from [here](https://github.com/yunify/qingstor-sdk-net/blob/master/src/Config), and modify it according to your required.
+
 ``` yaml
 # QingStor services configuration
 
