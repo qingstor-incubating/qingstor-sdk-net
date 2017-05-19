@@ -8,7 +8,7 @@ Each API function take a Input struct and return an Output struct. The Input str
 You can use a specified version of a service by import a service package with a date suffix.
 
 ``` .NET
-using QingStor_SDK_CSharp.Service;
+using QingStor_SDK_NET.Service;
 ```
 
 ### Code Snippet
