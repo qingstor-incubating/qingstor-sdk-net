@@ -6,7 +6,7 @@
 [![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/yunify/qingstor-sdk-net/blob/master/LICENSE)
 
 
-The official QingStor SDK for the .NET Framework.
+The official QingStor SDK for the .NET Framework. The version of the Target Framework must be >= 3.5.
 
 ## Getting Started
 
