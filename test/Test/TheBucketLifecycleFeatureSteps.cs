@@ -36,6 +36,12 @@ namespace test.Test
             ScenarioContext.Current.Pending();
         }
         
+        [Then(@"get bucket lifecycle should have filter prefix ""(.*)""")]
+        public void ThenGetBucketLifecycleShouldHaveFilterPrefix(string p0)
+        {
+            ScenarioContext.Current.Pending();
+        }
+        
         [Then(@"delete bucket lifecycle status code is (.*)")]
         public void ThenDeleteBucketLifecycleStatusCodeIs(int p0)
         {
