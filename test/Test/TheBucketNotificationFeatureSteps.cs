@@ -36,6 +36,12 @@ namespace test.Test
             ScenarioContext.Current.Pending();
         }
         
+        [Then(@"get bucket notification should have cloudfunc ""(.*)""")]
+        public void ThenGetBucketNotificationShouldHaveCloudfunc(string p0)
+        {
+            ScenarioContext.Current.Pending();
+        }
+        
         [Then(@"delete bucket notification status code is (.*)")]
         public void ThenDeleteBucketNotificationStatusCodeIs(int p0)
         {
