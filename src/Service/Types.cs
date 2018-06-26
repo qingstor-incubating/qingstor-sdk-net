@@ -27,10 +27,11 @@ namespace QingStor_SDK_CSharp.Service
 	
 	public class CAbortIncompleteMultipartUploadType : ICustomType
 	{
-		// Required
+		
+		// days after initiation// Required
 		
 		
-	public CIntegerType days_after_initiation { get; set; }
+	public long days_after_initiation { get; set; }
 
 
 	}
@@ -160,9 +161,10 @@ namespace QingStor_SDK_CSharp.Service
 	public class CExpirationType : ICustomType
 	{
 		
+		// days
 		
 		
-	public CIntegerType days { get; set; }
+	public long days { get; set; }
 
 
 	}
@@ -299,6 +301,7 @@ namespace QingStor_SDK_CSharp.Service
 	public class CNotificationsType : ICustomType
 	{
 		
+		// Event processing service
 		// Cloudfunc's available values: create_object, delete_object, abort_multipart
 		// Required
 		
@@ -319,10 +322,12 @@ namespace QingStor_SDK_CSharp.Service
 		
 	public string id { get; set; }
 
+		// notify url
 		
 		
 	public string notify_url { get; set; }
 
+		// Object name matching rule
 		
 		
 	public string object_filters { get; set; }
@@ -468,13 +473,15 @@ namespace QingStor_SDK_CSharp.Service
 	public class CTransitionType : ICustomType
 	{
 		
+		// days
 		
 		
-	public CIntegerType days { get; set; }
-// Required
+	public long days { get; set; }
+
+		// storage class// Required
 		
 		
-	public CIntegerType storage_class { get; set; }
+	public long storage_class { get; set; }
 
 
 	}

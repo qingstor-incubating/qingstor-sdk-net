@@ -1409,6 +1409,68 @@ namespace QingStor_SDK_CSharp.Service
     
 	
 	
+    public class CPutMetadataInput : ICustomType
+	{
+		public CPutMetadataInput()
+		{
+			
+			
+		this.Cache_Control = "";
+	
+		this.Content_Disposition = "";
+	
+		this.Content_Encoding = "";
+	
+		this.Expires = "";
+	
+		this.x_qs_meta_* = "";
+	
+
+			
+			
+			
+		}
+		
+
+		
+		// Specify the caching mechanism that the request and response follow
+		
+		
+	[CParam(ParamType = "header", ParamName = "Cache_Control")]
+	public string Cache_Control { get; set; }
+
+		// Specify the default filename when an object is downloaded
+		
+		
+	[CParam(ParamType = "header", ParamName = "Content_Disposition")]
+	public string Content_Disposition { get; set; }
+
+		// Specify the content encoding type of the object
+		
+		
+	[CParam(ParamType = "header", ParamName = "Content_Encoding")]
+	public string Content_Encoding { get; set; }
+
+		// Respond to the expiration date and time
+		
+		
+	[CParam(ParamType = "header", ParamName = "Expires")]
+	public string Expires { get; set; }
+
+		// Custom metadata
+		
+		
+	[CParam(ParamType = "header", ParamName = "x_qs_meta_*")]
+	public string x_qs_meta_* { get; set; }
+
+
+		
+
+		
+		
+		
+	}
+    
 
 	public class CPutMetadataOutput : ICustomType
 	{
@@ -4698,6 +4760,7 @@ namespace QingStor_SDK_CSharp.Service
     
     /*
      *
+     * @param InputParam
      *
      * Documentation URL: https://docs.qingcloud.com/qingstor/api/common/metadata
     */
@@ -4706,6 +4769,8 @@ namespace QingStor_SDK_CSharp.Service
         PutMetadata
     (
     
+         CPutMetadataInput InputParam
+        
     )
 	{
 		
@@ -4734,7 +4799,7 @@ namespace QingStor_SDK_CSharp.Service
 		dictInput.Add(ConstDef.REQ_HEADER_ACCESS_KEY_ID, this.Config.AccessKeyID);
 		dictInput.Add(ConstDef.REQ_HEADER_SECRET_ACCESS_KEY, this.Config.SecretAccessKey);
 
-		string strResponse = CRequest.GetInstance().Request(dictInput, null);
+		string strResponse = CRequest.GetInstance().Request(dictInput, InputParam);
 		JavaScriptSerializer Serializer = new JavaScriptSerializer();
 		if (Serializer != null)
 		{
