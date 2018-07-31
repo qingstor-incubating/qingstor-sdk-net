@@ -6,7 +6,7 @@
     {{- $opID := $operation.ID | camelCase -}}
         @Override
         public String validateParam() {
-            {{- template "ValidateCustomizedType" $operation.Request.Params -}}
+            {{- template "ValidateCustomizedType" $operation.Request.Query -}}
             {{- template "ValidateCustomizedType" $operation.Request.Headers -}}
             {{- template "ValidateCustomizedType" $operation.Request.Elements }}
 
@@ -274,7 +274,7 @@
 
 	{{$opID := $operation.ID | camelCase}}
 
-    {{$hasParams := gt (len $operation.Request.Params.Properties) 0}}
+    {{$hasParams := gt (len $operation.Request.Query.Properties) 0}}
     {{$hasHeaders := gt (len $operation.Request.Headers.Properties) 0}}
     {{$hasElements := gt (len $operation.Request.Elements.Properties) 0}}
     {{$hasStringBody := eq $operation.Request.Body.Type "string"}}
@@ -286,8 +286,8 @@
 	{
 		public C{{$opID}}Input()
 		{
-			{{if $operation.Request.Params.Properties | len}}
-				{{- $data := $operation.Request.Params -}}
+			{{if $operation.Request.Query.Properties | len}}
+				{{- $data := $operation.Request.Query -}}
 				{{template "Property_Init" passThrough $data}}
 			{{end}}
 			{{if $operation.Request.Headers.Properties | len}}
@@ -304,8 +304,8 @@
 				this.Body = null;
 			{{end}}
 		}
-		{{if $operation.Request.Params.Properties | len}}
-			{{- $data := $operation.Request.Params -}}
+		{{if $operation.Request.Query.Properties | len}}
+			{{- $data := $operation.Request.Query -}}
 			{{template "RenderProperties" passThrough $data `` "query"}}
 		{{end}}
 
@@ -347,29 +347,31 @@
 		public int StatusCode { get; set; }
 		public string RequestID { get; set; }
 		public string ErrorCode { get; set; }
-		{{if $operation.Response.Elements.Properties | len}}
-			{{$data := $operation.Response.Elements}}
-			{{template "RenderProperties" passThrough $data `` "query"}}
-		{{end}}
+	        {{- range $_, $response := $operation.Responses -}}	
+			{{if $response.Elements.Properties | len}}
+				{{$data := $response.Elements}}
+				{{template "RenderProperties" passThrough $data `` "query"}}
+			{{end}}
 
-		{{if $operation.Response.Headers.Properties | len}}
-			{{$data := $operation.Response.Headers}}
-			{{template "RenderProperties" passThrough $data `` "header"}}
-		{{end}}
-		
-		{{if eq $operation.Response.Body.Type "string"}}
-		[CParam(ParamType = "body", ParamName = "Body")]
-		{{if $operation.Response.Body.Description -}}
-			// {{$operation.Response.Body.Description}}
-		{{- end}}
-		public string Body { get; set; }
-		{{else if eq $operation.Response.Body.Type "binary"}}
-		[CParam(ParamType = "body", ParamName = "Body")]
-		{{if $operation.Response.Body.Description -}}
-			// {{$operation.Response.Body.Description}}
-		{{- end}}
-		public StreamReader Body { get; set; }
-		{{end}}
+			{{if $response.Headers.Properties | len}}
+				{{$data := $response.Headers}}
+				{{template "RenderProperties" passThrough $data `` "header"}}
+			{{end}}
+
+			{{if eq $response.Body.Type "string"}}
+			[CParam(ParamType = "body", ParamName = "Body")]
+			{{if $response.Body.Description -}}
+				// {{$response.Body.Description}}
+			{{- end}}
+			public string Body { get; set; }
+			{{else if eq $response.Body.Type "binary"}}
+			[CParam(ParamType = "body", ParamName = "Body")]
+			{{if $response.Body.Description -}}
+				// {{$response.Body.Description}}
+			{{- end}}
+			public StreamReader Body { get; set; }
+			{{end}}
+		{{- end }}
 	}
 {{end}}
 
@@ -379,8 +381,8 @@
 
 	{{$opID := $operation.ID | camelCase}}
 
-	{{$newURI := replace $operation.Request.URI "{objectKey}" "replace" -1}}
-    {{$hasParams := gt (len $operation.Request.Params.Properties) 0}}
+	{{$newURI := replace $operation.Request.Path "{objectKey}" "replace" -1}}
+    {{$hasParams := gt (len $operation.Request.Query.Properties) 0}}
     {{$hasHeaders := gt (len $operation.Request.Headers.Properties) 0}}
     {{$hasElements := gt (len $operation.Request.Elements.Properties) 0}}
     {{$hasStringBody := eq $operation.Request.Body.Type "string"}}
@@ -401,7 +403,7 @@
         {{$opID | camelCase | upperFirst -}}
     {{end}}
     (
-    {{if eq $operation.Request.URI $newURI}}
+    {{if eq $operation.Request.Path $newURI}}
         {{- if $hasInput}}
          C{{$opID | camelCase | upperFirst}}Input InputParam
         {{end}}
@@ -410,7 +412,7 @@
     {{end}}
     )
 	{
-		{{$uri := $operation.Request.URI}}
+		{{$uri := $operation.Request.Path}}
 		{{$uri := replace $uri "{" "<" -1}}
 		{{$uri := replace $uri "}" ">" -1}}
 		{{$uri := dashConnected $uri}}
@@ -429,7 +431,7 @@
 		strURIPath = strURIPath.Replace("<bucket-name>", this.BucketName);
         dictInput.Add(ConstDef.REQ_HEADER_BUCKET_NAME, this.BucketName);
 		{{end}}
-		{{if ne $operation.Request.URI $newURI}}
+		{{if ne $operation.Request.Path $newURI}}
 		strURIPath = strURIPath.Replace("<object-key>", ObjectName);
 		dictInput.Add(ConstDef.REQ_HEADER_OBJECT_NAME, ObjectName);
 		{{end}}
